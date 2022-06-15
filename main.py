@@ -68,7 +68,8 @@ class Unzip:
             folder: path da pasta que irá receber dados extraidos
             backup: path da pasta de backup
 
-        Return: None
+        Return: 
+            None
         """
         if not folder.exists():
             folder.mkdir()
@@ -89,7 +90,8 @@ class Unzip:
         Args:
             path: Path do arquivo original .zip
 
-        Return: None
+        Return:
+            None
         """
         folder, folder2, backup = self._handle_names(path)
 
@@ -105,7 +107,8 @@ class Unzip:
             file_name: Path do arquivo original
             folder: Path da pasta referente ao mês
 
-        Return: None
+        Return:
+            None
         """
         if file_name.suffix == '.zip':
             with ZipFile(str(file_name), "r") as zip:
@@ -159,7 +162,10 @@ if __name__ == "__main__":
         folder_path = ['/home/hotratx/ttttest']
     elif platform == 'win32':
         folder_path = [r'C:\Users\hotratx\Desktop\teste']
+    elif platform == 'darwin':
+        folder_path = ['/User/hotratx/ttttest']
     else:
         folder_path = []
+
     unzip = Unzip(folder_path)
     unzip.run()
