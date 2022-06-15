@@ -56,10 +56,11 @@ class Unzip:
         _list_names = path_no_suffix.name.split("_")[:2]
         _name_folder = f"{_list_names[0]}_{_list_names[1]}"
         folder = path.parent / _name_folder
+        folder2 = path.parent / _name_folder / path_no_suffix.name
         backup = path.parent / "backup"
-        return [folder, backup ]
+        return [folder, folder2, backup ]
 
-    def _create_folders(self, folder: Path, backup: Path):
+    def _create_folders(self, folder: Path, folder2: Path, backup: Path):
         """Cria as novas pastas
 
         Args:
@@ -70,8 +71,12 @@ class Unzip:
         """
         if not folder.exists():
             folder.mkdir()
+
         elif not folder.is_dir():
             folder.mkdir()
+
+        if not folder2.exists():
+            folder2.mkdir()
 
         if not backup.exists():
             backup.mkdir()
@@ -85,11 +90,11 @@ class Unzip:
 
         Return: None
         """
-        new_folder, backup = self._handle_names(path)
+        folder, folder2, backup = self._handle_names(path)
 
-        self._create_folders(new_folder, backup)
+        self._create_folders(folder, folder2, backup)
 
-        self._unzip(path, new_folder, backup)
+        self._unzip(path, folder2, backup)
 
     def _unzip(self, file_name: Path, folder: Path, backup: Path) -> None:
         """Extrai os arquivos zipados para a nova pasta, e move o
@@ -102,15 +107,15 @@ class Unzip:
         """
         with ZipFile(str(file_name), "r") as zip:
             zip.extractall(str(folder))
-            try:
-                shutil.move(file_name, backup)
-            except:
-                print(
-                    f"o arquivo {file_name} já está na pasta de backup, logo será deletado!"
-                )
-                file_name.unlink()
+        try:
+            shutil.move(file_name, backup)
+        except:
+            print(
+                f"o arquivo {file_name} já está na pasta de backup, logo será deletado!"
+            )
+            file_name.unlink()
 
-            self.quant_unzip += 1
+        self.quant_unzip += 1
 
     def _analise_folder(self, folders_empresas):
         for p in folders_empresas:
@@ -137,7 +142,7 @@ if __name__ == "__main__":
     if platform == "linux" or platform == "linux2":
         folder_path = ['/home/hotratx/ttttest']
     elif platform == 'win32':
-        folder_path = ['C:\\Users\\hotratx']
+        folder_path = [r'C:\Users\hotratx\Desktop\teste']
     else:
         folder_path = []
     unzip = Unzip(folder_path)
