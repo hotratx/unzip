@@ -14,8 +14,8 @@ class Unzip:
         self.paths = paths
 
     def _search_files_zip(self, path: Path) -> List[Path]:
-        """Filtra os arquivos da pasta path, retornarndo apenas arquivos .zip e que
-            possuem o padrão do regex pattern.
+        """Filtra os arquivos da pasta path, retornarndo apenas arquivos .zip 
+            e que possuem o padrão do pattern regex.
 
         Args:
             path: Path da pasta com arquivos para ser analisado.
@@ -40,16 +40,13 @@ class Unzip:
 
     def _handle_names(self, path: Path) -> List[Path]:
         """Manipula o path do arquivo.zip para retornar os paths das
-            pastas de backup e de armazenamento dos aquivos extraidos e
-            o path sem suffix.
-
+            pastas de backup e de armazenamento dos aquivos extraídos.
         Args:
             path: Path do aquivo .zip
 
         Return:
-            path_no_suffix: Path sem suffix
             folder: Path da pasta que representa o mês
-            folder2: Path da pasta onde serão armazenados os arquivos extraidos
+            folder2: Path da pasta onde serão armazenados os arquivos extraídos
             backup: Path da pasta de backup que armazena os arquivos originais .zip
         """
         path_no_suffix = path.with_suffix("")
@@ -65,7 +62,7 @@ class Unzip:
 
         Args:
             folder: path da pasta referente ao mês
-            folder: path da pasta que irá receber dados extraidos
+            folder: path da pasta que irá receber dados extraídos
             backup: path da pasta de backup
 
         Return: 
@@ -141,7 +138,7 @@ class Unzip:
                 _ = list(map(self._extract_zip, files))
 
     def run(self) -> None:
-        """Inicia o a busca rercursica pelos arquivos .zip
+        """Inicia o a busca recursiva pelos arquivos .zip
         """
         self.quant_unzip = 0
         for path in self.paths:
@@ -150,9 +147,9 @@ class Unzip:
             self._analise_folder(folders_empresas)
 
         if self.quant_unzip:
-            print(f"Foram extraidos dados de {self.quant_unzip} arquivos .zip")
+            print(f"Foram extraídos dados de {self.quant_unzip} arquivos .zip")
         else:
-            print("Não foram encontrados arquivos .zip para serem extraidos dados")
+            print("Não foram encontrados arquivos .zip!")
 
 
 if __name__ == "__main__":
