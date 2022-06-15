@@ -5,10 +5,8 @@ from zipfile import ZipFile
 from pathlib import Path
 
 
-pattern = re.compile(r"\d{4}_\d{2}_\d{2}.*")
-
-
 class Unzip:
+    pattern = re.compile(r"\d{4}_\d{2}_\d{2}.*")
     quant_unzip = 0
 
     def __init__(self, paths: List) -> None:
@@ -49,7 +47,8 @@ class Unzip:
 
         Return:
             path_no_suffix: Path sem suffix
-            folder: Path da pasta onde serão armazenados os arquivos extraidos
+            folder: Path da pasta que representa o mês
+            folder2: Path da pasta onde serão armazenados os arquivos extraidos
             backup: Path da pasta de backup que armazena os arquivos originais .zip
         """
         path_no_suffix = path.with_suffix("")
@@ -64,6 +63,7 @@ class Unzip:
         """Cria as novas pastas
 
         Args:
+            folder: path da pasta referente ao mês
             folder: path da pasta que irá receber dados extraidos
             backup: path da pasta de backup
 
@@ -101,7 +101,8 @@ class Unzip:
         arquivo original .zip para a pasta de backup
 
         Args:
-            path: Path do arquivo original .zip
+            file_name: Path do arquivo original
+            folder: Path da pasta referente ao mês
 
         Return: None
         """
@@ -117,13 +118,23 @@ class Unzip:
 
         self.quant_unzip += 1
 
-    def _analise_folder(self, folders_empresas):
+    def _analise_folder(self, folders_empresas) -> None:
+        """Percore a lista de Paths das empresas
+
+        Args:
+            folders_empresas: lista com os path das empresas
+
+        Return:
+            None
+        """
         for p in folders_empresas:
             files = self._search_files_zip(p)
             if files:
                 _ = list(map(self._extract_zip, files))
 
     def run(self) -> None:
+        """Inicia o a busca rercursica pelos arquivos .zip
+        """
         self.quant_unzip = 0
         for path in self.paths:
             p1 = Path(path)
