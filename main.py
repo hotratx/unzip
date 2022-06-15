@@ -54,10 +54,10 @@ class Unzip:
         """
         path_no_suffix = path.with_suffix("")
         _list_names = path_no_suffix.name.split("_")[:2]
-        _name_folder = f"{_list_names[0]}{_list_names[1]}"
+        _name_folder = f"{_list_names[0]}_{_list_names[1]}"
         folder = path.parent / _name_folder
         backup = path.parent / "backup"
-        return [ path_no_suffix, folder, backup ]
+        return [folder, backup ]
 
     def _create_folders(self, folder: Path, backup: Path):
         """Cria as novas pastas
@@ -85,7 +85,7 @@ class Unzip:
 
         Return: None
         """
-        path_no_suffix, new_folder, backup = self._handle_names(path)
+        new_folder, backup = self._handle_names(path)
 
         self._create_folders(new_folder, backup)
 
@@ -118,7 +118,7 @@ class Unzip:
             if files:
                 _ = list(map(self._extract_zip, files))
 
-    def run(self) -> str:
+    def run(self) -> None:
         self.quant_unzip = 0
         for path in self.paths:
             p1 = Path(path)
@@ -126,9 +126,9 @@ class Unzip:
             self._analise_folder(folders_empresas)
 
         if self.quant_unzip:
-            return f"Foram extraidos dados de {self.quant_unzip} arquivos .zip"
+            print(f"Foram extraidos dados de {self.quant_unzip} arquivos .zip")
         else:
-            return "Não foram encontrados arquivos .zip para serem extraidos dados"
+            print("Não foram encontrados arquivos .zip para serem extraidos dados")
 
 
 if __name__ == "__main__":
