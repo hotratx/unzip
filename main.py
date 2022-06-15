@@ -1,12 +1,13 @@
 import re
 import shutil
+import rarfile
 from typing import List
 from zipfile import ZipFile
 from pathlib import Path
 
 
 class Unzip:
-    pattern = re.compile(r"\d{4}_\d{2}_\d{2}.*")
+    pattern = re.compile(r"\d{4}_\d{2}_\d{2}.*(\.rar|\.zip)")
     quant_unzip = 0
 
     def __init__(self, paths: List) -> None:
@@ -23,7 +24,7 @@ class Unzip:
             List: lista com os path dos arquivos que correspondem ao procurado
         """
         return [
-            p for p in path.iterdir() if p.suffix == ".zip" and pattern.search(p.name)
+            p for p in path.iterdir() if self.pattern.search(p.name)
         ]
 
     def _search_folders_empresas(self, path: Path) -> List[Path]:
@@ -106,8 +107,12 @@ class Unzip:
 
         Return: None
         """
-        with ZipFile(str(file_name), "r") as zip:
-            zip.extractall(str(folder))
+        if file_name.suffix == '.zip':
+            with ZipFile(str(file_name), "r") as zip:
+                zip.extractall(str(folder))
+        elif file_name.suffix == '.rar':
+            with rarfile.RarFile(str(file_name)) as rar:
+                rar.extractall(str(folder))
         try:
             shutil.move(file_name, backup)
         except:

@@ -7,6 +7,7 @@ authors = ["hotratx <mgviero@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 PySimpleGUI = "^4.60.1"
+rarfile = "^4.0"
 
 [tool.poetry.dev-dependencies]
 
