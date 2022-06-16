@@ -142,9 +142,9 @@ class Unzip:
             self._analise_folder(folders_empresas)
 
         if self.quant_unzip:
-            print(f"Foram extraídos dados de {self.quant_unzip} arquivos .zip")
+            print(f"Foram extraídos dados de {self.quant_unzip} novos arquivos.zip")
         else:
-            print("Não foram encontrados arquivos .zip!")
+            print("Não foram encontrados novos arquivos.zip!")
 
 
 if __name__ == "__main__":
