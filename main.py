@@ -50,19 +50,15 @@ class Unzip:
             path: Path do aquivo .zip
 
         Return:
-            folder: Path da pasta que representa o mês
-            folder2: Path da pasta onde serão armazenados os arquivos extraídos
+            folder: Path da pasta onde serão armazenados os arquivos extraídos
             backup: Path da pasta de backup que armazena os arquivos originais .zip
         """
         path_no_suffix = path.with_suffix("")
-        _list_names = path_no_suffix.name.split("_")[:2]
-        _name_folder = f"{_list_names[0]}_{_list_names[1]}"
-        folder = path.parent / _name_folder
-        folder2 = path.parent / _name_folder / path_no_suffix.name
+        folder = path.parent / path_no_suffix.name
         backup = path.parent / "backup"
-        return [folder, folder2, backup]
+        return [folder, backup]
 
-    def _create_folders(self, folder: Path, folder2: Path, backup: Path):
+    def _create_folders(self, folder: Path, backup: Path):
         """Cria as novas pastas
 
         Args:
@@ -75,12 +71,6 @@ class Unzip:
         """
         if not folder.exists():
             folder.mkdir()
-
-        elif not folder.is_dir():
-            folder.mkdir()
-
-        if not folder2.exists():
-            folder2.mkdir()
 
         if not backup.exists():
             backup.mkdir()
@@ -95,11 +85,11 @@ class Unzip:
         Return:
             None
         """
-        folder, folder2, backup = self._handle_names(path)
+        folder, backup = self._handle_names(path)
 
-        self._create_folders(folder, folder2, backup)
+        self._create_folders(folder, backup)
 
-        self._unzip(path, folder2, backup)
+        self._unzip(path, folder, backup)
 
     def _unzip(self, file_name: Path, folder: Path, backup: Path) -> None:
         """Extrai os arquivos zipados para a nova pasta, e move o
