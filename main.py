@@ -1,7 +1,7 @@
 import re
 import shutil
 import rarfile
-from typing import List
+from typing import List, Generator
 from zipfile import ZipFile
 from pathlib import Path
 
@@ -13,7 +13,7 @@ class Unzip:
     def __init__(self, paths: List) -> None:
         self.paths = paths
 
-    def _search_files_zip(self, path: Path) -> List[Path]:
+    def _search_files_zip(self, path: Path) -> Generator:
         """Filtra os arquivos da pasta path, retornarndo apenas arquivos .zip 
             e que possuem o padrão do pattern regex.
 
@@ -21,11 +21,16 @@ class Unzip:
             path: Path da pasta com arquivos para ser analisado.
 
         Return:
-            List: lista com os path dos arquivos que correspondem ao procurado
+            Generator: um gerador com os path dos arquivos que correspondem 
+            ao procurado
         """
-        return [
-            p for p in path.iterdir() if self.pattern.search(p.name)
-        ]
+        anos = [p for p in path.iterdir() if p.is_dir()]
+        for ano in anos:
+            meses = [p for p in ano.iterdir() if p.is_dir()]
+            for mes in meses:
+                files_zip = [p for p in mes.iterdir() if self.pattern.search(p.name)]
+                for file in files_zip:
+                    yield file
 
     def _search_folders_empresas(self, path: Path) -> List[Path]:
         """Filtra as pasta contidas do path
@@ -55,7 +60,7 @@ class Unzip:
         folder = path.parent / _name_folder
         folder2 = path.parent / _name_folder / path_no_suffix.name
         backup = path.parent / "backup"
-        return [folder, folder2, backup ]
+        return [folder, folder2, backup]
 
     def _create_folders(self, folder: Path, folder2: Path, backup: Path):
         """Cria as novas pastas
@@ -65,7 +70,7 @@ class Unzip:
             folder: path da pasta que irá receber dados extraídos
             backup: path da pasta de backup
 
-        Return: 
+        Return:
             None
         """
         if not folder.exists():
@@ -132,10 +137,10 @@ class Unzip:
         Return:
             None
         """
-        for p in folders_empresas:
-            files = self._search_files_zip(p)
-            if files:
-                _ = list(map(self._extract_zip, files))
+        for emp in folders_empresas:
+            files_zip = self._search_files_zip(emp)
+            if files_zip:
+                _ = list(map(self._extract_zip, files_zip))
 
     def run(self) -> None:
         """Inicia o a busca recursiva pelos arquivos .zip
