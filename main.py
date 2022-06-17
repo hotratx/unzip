@@ -53,8 +53,7 @@ class Unzip:
             folder: Path da pasta onde serão armazenados os arquivos extraídos
             backup: Path da pasta de backup que armazena os arquivos originais .zip
         """
-        path_no_suffix = path.with_suffix("")
-        folder = path.parent / path_no_suffix.name
+        folder = path.parent
         backup = path.parent / "backup"
         return [folder, backup]
 
